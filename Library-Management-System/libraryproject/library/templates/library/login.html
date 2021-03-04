@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<br><br>
+
+<h1><em><b><u>Please Login</u> </b></em></h1> <br><br>
+
+
+<div class="contain">
+  <div class="form-group col-xs-6">
+    <form action="" method="post">
+      {% csrf_token %}
+      {{form|crispy}}
+
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-danger" role="alert">
+        {{message}}
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      <div class="text-center">
+        <input type="submit" class="btn btn-success btn-lg" value="Login">
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
