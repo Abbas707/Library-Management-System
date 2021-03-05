@@ -2,10 +2,13 @@
 
 {% block content %}
 
+
 <div class="container" >
-<br> <br>
+  
+<br> 
+<a href="{% url 'library:add_books' %}" class="btn btn-primary">Add New Books</a> <br>
 <h4 style="color:#1e6cb9"><b><center> List of Books </center></b></h4>
-<br>
+
   <table class="table table-striped" style="background-color:#c9d2db">
   <thead class="thead-dark">
     <tr>

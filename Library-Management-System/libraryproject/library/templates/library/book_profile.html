@@ -2,11 +2,27 @@
 
 {% block content %}
 
+
+
+<br> 
+<div class="container">
+{% if messages %}
+{% for message in messages %}
+  <div class="alert alert-secondary" role="alert">
+	{{message}}
+  </div>
+{% endfor %}
+{% endif %}
+</div>
+
+<br>
+<div class="container">
+	<a href="{% url 'library:book_lists' %}" class="btn btn-info btn-sm">Go to Book Lists Table</a>&nbsp;
+</div>
 <div class="container emp-profile">
 	<form method="post">
 		<div class="row">
 			<div class="col-md-4">
-
 				{% if book.cover_pic %}
 				<div class="" style="width:182px; height:100px; padding-left:19px; padding-right:4px;">
 				<img class="card-img-top" src="{{book.cover_pic.url}}" alt="Card image" style="width:100%">
@@ -34,8 +50,10 @@
 				</div>
 			</div>
 			<div class="col-md-2">
-				<a href="{% url 'library:book_update' pk=book.pk %}" class="btn btn-info btn-sm">Edit</a>&nbsp;
-				<a href="{% url 'library:book_delete' pk=book.pk %}" class="btn btn-info btn-sm">Delete</a>&nbsp;
+				{% if user.is_staff %}
+					<a href="{% url 'library:book_update' pk=book.pk %}" class="btn btn-info btn-sm">Edit</a>&nbsp;
+					<a href="{% url 'library:book_delete' pk=book.pk %}" class="btn btn-info btn-sm" onclick="if (!confirm('Are you sure?')) { return false }">Delete</a>&nbsp;	
+				{% endif %}
 			</div>
 		</div>
 		<div class="row">

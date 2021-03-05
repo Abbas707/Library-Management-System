@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% load static %} 
+{% block content %}
+
+<br>
+
+<h1><em><b><u>Admin Dashboard</u> </b></em></h1> <br><br><br>
+
+<div class="container">
+
+<div class="row">
+
+  <div class="col-md-3 col-sm-6">
+    <div class="card" style="width: 15rem;">
+      <img src="{% static 'images/student.jpg' %}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Student</h5>
+        <a href="{% url 'library:student_lists' %}" class="btn btn-primary">Go to Student Lists</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 col-sm-6">
+    <div class="card" style="width: 15rem;">
+      <img src="{% static 'images/faculty.png' %}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Faculty</h5>
+        <a href="{% url 'library:faculty_lists' %}" class="btn btn-primary">Go to Faculty Lists</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 col-sm-6">
+    <div class="card" style="width: 15rem;">
+      <img src="{% static 'images/librarian.png' %}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Librarian</h5>
+        <a href="{% url 'library:librarian_lists' %}" class="btn btn-primary">Go to Librarian Lists</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 col-sm-6">
+    <div class="card" style="width: 15rem;">
+      <img src="{% static 'images/bookimg.jpg' %}" class="card-img-top" height="240px;" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Books</h5>
+        <a href="{% url 'library:book_lists' %}" class="btn btn-primary">Go to Books Lists</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+{% endblock %}

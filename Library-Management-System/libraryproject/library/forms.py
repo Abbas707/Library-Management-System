@@ -39,6 +39,17 @@ class UserForm(UserCreationForm):
     fields = ('first_name', 'last_name', 'username', 'password1','password2','phone_no', 'profile_pic',)
 
 
+class UserFormOne(forms.ModelForm):
+  first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter first name'}))
+  last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter last name'}))
+  username = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter username'}))
+  phone_no = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter contact number'}))
+
+  class Meta:
+    model = User
+    fields = ('first_name', 'last_name', 'username', 'phone_no', 'profile_pic',)
+
+
 class StudentForm(forms.ModelForm):
 
   class Meta:
@@ -61,6 +72,10 @@ class LibrarianForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.Form):
+  username = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter your username'}))
+  password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Enter your password'}))
+
+class AdminLoginForm(forms.Form):
   username = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter your username'}))
   password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Enter your password'}))
 

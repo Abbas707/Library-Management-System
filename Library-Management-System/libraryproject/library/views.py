@@ -15,7 +15,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class BookListsView(View):
   def get(self, request):
     book = Book.objects.all()
-    return render(request, 'library/book_details.html',{'books':book})
+    return render(request, 'library/book_lists.html',{'books':book})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -38,7 +38,7 @@ class SignupView(View):
     user_role = {
             'Student': StudentForm(request.POST),
             'Faculty': FacultyForm(request.POST),
-            }
+          }
         
     roleform = RoleForm(request.POST)
         
@@ -73,6 +73,8 @@ class SignupView(View):
         return redirect('library:user_profile', pk=user.id)
 
       else:
+        return render(request, 'library/signup.html', {'userform': userform, 'departmentform':deptform, 'roleform':roleform})
+    else:
         return render(request, 'library/signup.html', {'userform': userform, 'departmentform':deptform, 'roleform':roleform})
 
 
@@ -117,15 +119,15 @@ class LoginView(View):
   def post(self, request):
     self.uname = request.POST['username']
     self.upass = request.POST['password']
-    print(self.uname, self.upass)
+    # print(self.uname, self.upass)
     self.user = authenticate(username=self.uname, password=self.upass)
-    print(self.user)
+    # print(self.user)
 
     if self.user:
       if self.user.is_active:
         login(request, self.user)
         if self.user.is_staff:
-          return redirect('library:book_details')
+          return redirect('library:admin_home')
         return redirect('library:user_profile', pk=self.user.id)
       else:
         return HttpResponse('Account not active')
@@ -169,13 +171,14 @@ class AddBook(View):
       new_category = Category.objects.get(category=category)
       book.category = new_category
       book.save()
-      return redirect('library:book_profile', pk=book.id)
+      # return redirect('library:book_profile', pk=book.id)
+      return redirect('library:book_lists')
 
     else:
       return render(request, 'library/add_books.html', {'bookform':bookform, 'categoryform':categoryform})
 
 
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class BookView(View):
   def get(self, request, pk):
     book = Book.objects.get(id=pk)
@@ -200,7 +203,11 @@ class BookUpdate(View):
 
       book.category = new_category
       book.save()
+      messages.info(request, "Book Updated sucessfully!!")
       return redirect('library:book_profile', pk=book.pk)
+    
+    else:
+      return render(request, 'library/add_books.html', {'bookform':bookform})
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -208,6 +215,114 @@ class BookDelete(View):
   def get(self, request, pk):
     book = Book.objects.get(id=pk)
     book.delete()
-    return redirect('library:add_books')
+    return redirect('library:book_lists')
 
 
+
+# Admin Dashboard
+@method_decorator(staff_member_required, name='dispatch')
+class AdminHome(View):
+  def get(self, request):
+    return render(request, 'library/admin_home.html')
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class StudentLists(View):
+  def get(self, request):
+    student = Student.objects.all()
+    return render(request, 'library/student_lists.html', {'students':student})
+
+@method_decorator(staff_member_required, name='dispatch')
+class FacultyLists(View):
+  def get(self, request):
+    faculty = Faculty.objects.all()
+    return render(request, 'library/faculty_lists.html', {'faculty':faculty})
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class LibrarianLists(View):
+  def get(self, request):
+    librarian = Librarian.objects.all()
+    return render(request, 'library/librarian_lists.html', {'librarian':librarian})
+
+@method_decorator(staff_member_required, name='dispatch')
+class StudentEdit(View):
+  def get(self, request, pk):
+    student = User.objects.get(id=pk)
+    userform = UserFormOne(instance=student)
+    return render(request, 'library/signup.html', {'userform': userform})
+
+  def post(self, request, pk):
+    student = User.objects.get(id=pk)
+    userform = UserFormOne(request.POST, request.FILES, instance=student)
+    
+    if userform.is_valid():
+      student = userform.save(commit=False)
+      student.save()
+      return redirect('library:student_lists')
+    else:
+      return redirect('library:student_edit', pk=student.pk)
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class FacultyEdit(View):
+  def get(self, request, pk):
+    faculty = User.objects.get(id=pk)
+    userform = UserFormOne(instance=faculty)
+    return render(request, 'library/signup.html', {'userform': userform})
+
+  def post(self, request, pk):
+    faculty = User.objects.get(id=pk)
+    userform = UserFormOne(request.POST, request.FILES, instance=faculty)
+    
+    if userform.is_valid():
+      faculty = userform.save(commit=False)
+      faculty.save()
+      return redirect('library:faculty_lists')
+    
+    else:
+      return redirect('library:faculty_edit', pk=faculty.pk)
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class LibrarianEdit(View):
+  def get(self, request, pk):
+    librarian = User.objects.get(id=pk)
+    userform = UserFormOne(instance=librarian)
+    return render(request, 'library/signup.html', {'userform': userform})
+
+  def post(self, request, pk):
+    librarian = User.objects.get(id=pk)
+    userform = UserFormOne(request.POST, request.FILES, instance=librarian)
+    
+    if userform.is_valid():
+      librarian = userform.save(commit=False)
+      librarian.save()
+      return redirect('library:librarian_lists')
+    
+    else:
+      return redirect('library:librarian_edit', pk=librarian.pk)
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class StudentDelete(View):
+  def get(self, request, pk):
+    student = User.objects.get(id=pk)
+    student.delete()
+    return redirect('library:student_lists')
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class FacultyDelete(View):
+  def get(self, request, pk):
+    faculty = User.objects.get(id=pk)
+    faculty.delete()
+    return redirect('library:faculty_lists')
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class LibrarianDelete(View):
+  def get(self, request, pk):
+    librarian = User.objects.get(id=pk)
+    librarian.delete()
+    return redirect('library:librarian_lists')
