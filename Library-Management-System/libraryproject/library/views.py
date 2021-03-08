@@ -9,6 +9,26 @@ from django.contrib import messages
 from library.models import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from libraryproject.settings import EMAIL_HOST_USER,EMAIL_HOST_PASSWORD
+
+from django.core.mail import send_mail
+
+@method_decorator(login_required, name='dispatch')
+class ContactView(View):
+  def get(self, request):
+    form = ContactForm()
+    return render(request, 'library/contact.html',{'form':form})
+
+  def post(self, request):
+    form = ContactForm(request.POST)
+    subject = 'Hi, Everyone'
+    message = 'Hope you are enjoying in BoTree Technologies'
+    recepient = str(form['Email'].value())
+    send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
+    messages.info(request, 'Email Sent successfully!!')
+
+    return render(request, 'library/contact.html',{'form':form})
+
 
 # Create your views here.
 @method_decorator(staff_member_required, name='dispatch')

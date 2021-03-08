@@ -93,3 +93,9 @@ class BookForm(forms.ModelForm):
     model = Book
     fields = '__all__'
 
+
+class ContactForm(forms.Form):
+  Email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Please enter your email'}))
+
+  def __str__(self):
+    return self.Email

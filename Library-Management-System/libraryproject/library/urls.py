@@ -25,7 +25,7 @@ urlpatterns = [
   path('librarianedit/<int:pk>/', views.LibrarianEdit.as_view(), name='librarian_edit'),
   path('userdelete/<int:pk>/', views.UserDelete.as_view(), name='user_delete'),
 
-
+  path('contact/', views.ContactView.as_view(), name='contact_us'),
 
 ]
 
