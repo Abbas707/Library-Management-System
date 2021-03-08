@@ -10,18 +10,9 @@
 <div class="contain">
 <form class="" method="post" enctype="multipart/form-data">
   {% csrf_token %}
-
-  {% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-primary" role="alert">
-      {{message}}
-    </div>
-  {% endfor %}
-  {% endif %}
-
+  
   {{bookform|crispy}}
   
-
   <div class="text-center">
     <input type="submit" class="btn btn-success btn-lg" value="Submit" name="submit">
   </div>

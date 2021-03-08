@@ -16,9 +16,13 @@
 </div>
 
 <br>
+
+{% if user.is_staff %}
 <div class="container">
 	<a href="{% url 'library:book_lists' %}" class="btn btn-info btn-sm">Go to Book Lists Table</a>&nbsp;
 </div>
+{% endif %}
+
 <div class="container emp-profile">
 	<form method="post">
 		<div class="row">

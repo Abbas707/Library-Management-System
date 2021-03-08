@@ -21,7 +21,8 @@ class BookListsView(View):
 @method_decorator(login_required, name='dispatch')
 class HomeView(View):
   def get(self, request):
-    return render(request, 'library/home.html')
+    book = Book.objects.all()[::-1]
+    return render(request, 'library/home.html', {'books':book})
 
 
 class SignupView(View):
@@ -305,24 +306,17 @@ class LibrarianEdit(View):
 
 
 @method_decorator(staff_member_required, name='dispatch')
-class StudentDelete(View):
-  def post(self, request, pk):
-    student = User.objects.get(id=pk)
-    student.delete()
-    return redirect('library:student_lists')
+class UserDelete(View):
+  def get(self, request, pk):
+    user = User.objects.get(id=pk)
+    new_role = user.role.role
+    user.delete()
+
+    if new_role == 'Student':
+      return redirect('library:student_lists')
+    elif new_role == 'Faculty':
+      return redirect('library:faculty_lists')
+    else:
+      return redirect('library:librarian_lists')
 
 
-@method_decorator(staff_member_required, name='dispatch')
-class FacultyDelete(View):
-  def post(self, request, pk):
-    faculty = User.objects.get(id=pk)
-    faculty.delete()
-    return redirect('library:faculty_lists')
-
-
-@method_decorator(staff_member_required, name='dispatch')
-class LibrarianDelete(View):
-  def post(self, request, pk):
-    librarian = User.objects.get(id=pk)
-    librarian.delete()
-    return redirect('library:librarian_lists')

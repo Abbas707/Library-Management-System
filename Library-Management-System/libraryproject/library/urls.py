@@ -23,11 +23,10 @@ urlpatterns = [
   path('studentedit/<int:pk>/', views.StudentEdit.as_view(), name='student_edit'),
   path('facultyedit/<int:pk>/', views.FacultyEdit.as_view(), name='faculty_edit'),
   path('librarianedit/<int:pk>/', views.LibrarianEdit.as_view(), name='librarian_edit'),
-  path('studentdelete/<int:pk>/', views.StudentDelete.as_view(), name='student_delete'),
-  path('facultydelete/<int:pk>/', views.FacultyDelete.as_view(), name='faculty_delete'),
-  path('librariandelete/<int:pk>/', views.LibrarianDelete.as_view(), name='librarian_delete'),
+  path('userdelete/<int:pk>/', views.UserDelete.as_view(), name='user_delete'),
 
-  
+
+
 ]
 
 
