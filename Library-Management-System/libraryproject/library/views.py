@@ -306,7 +306,7 @@ class LibrarianEdit(View):
 
 @method_decorator(staff_member_required, name='dispatch')
 class StudentDelete(View):
-  def get(self, request, pk):
+  def post(self, request, pk):
     student = User.objects.get(id=pk)
     student.delete()
     return redirect('library:student_lists')
@@ -314,7 +314,7 @@ class StudentDelete(View):
 
 @method_decorator(staff_member_required, name='dispatch')
 class FacultyDelete(View):
-  def get(self, request, pk):
+  def post(self, request, pk):
     faculty = User.objects.get(id=pk)
     faculty.delete()
     return redirect('library:faculty_lists')
@@ -322,7 +322,7 @@ class FacultyDelete(View):
 
 @method_decorator(staff_member_required, name='dispatch')
 class LibrarianDelete(View):
-  def get(self, request, pk):
+  def post(self, request, pk):
     librarian = User.objects.get(id=pk)
     librarian.delete()
     return redirect('library:librarian_lists')
