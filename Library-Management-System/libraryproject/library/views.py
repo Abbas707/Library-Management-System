@@ -10,7 +10,7 @@ from library.models import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from libraryproject.settings import EMAIL_HOST_USER,EMAIL_HOST_PASSWORD
-
+from django.http import JsonResponse
 from django.core.mail import send_mail
 
 @method_decorator(login_required, name='dispatch')
@@ -253,6 +253,7 @@ class StudentLists(View):
     student = Student.objects.all()
     return render(request, 'library/student_lists.html', {'students':student})
 
+
 @method_decorator(staff_member_required, name='dispatch')
 class FacultyLists(View):
   def get(self, request):
@@ -265,6 +266,8 @@ class LibrarianLists(View):
   def get(self, request):
     librarian = Librarian.objects.all()
     return render(request, 'library/librarian_lists.html', {'librarian':librarian})
+
+
 
 @method_decorator(staff_member_required, name='dispatch')
 class StudentEdit(View):
@@ -340,3 +343,10 @@ class UserDelete(View):
       return redirect('library:librarian_lists')
 
 
+
+def validate_username(request):
+    username = request.GET.get('username', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    return JsonResponse(data)

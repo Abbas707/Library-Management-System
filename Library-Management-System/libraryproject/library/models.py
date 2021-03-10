@@ -54,7 +54,7 @@ class User(AbstractUser):
   role = models.ForeignKey(Role, on_delete=models.CASCADE, blank=True, null=True)
   phone_no = PhoneNumberField(null=True, blank=True, unique=True)
   profile_pic = models.ImageField(upload_to='profile_pic',blank=True, null=True)
-  department = models.ForeignKey(Department, related_name='dept',on_delete=models.CASCADE,blank=True, null=True)
+  department = models.ForeignKey(Department, related_name='dept', on_delete=models.CASCADE,blank=True, null=True)
 
 
 class Admin(models.Model):

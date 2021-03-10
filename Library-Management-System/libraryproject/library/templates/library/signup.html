@@ -2,8 +2,8 @@
 
 {% load crispy_forms_tags %}
 
+{% load static %}
 {% block content %}
-
 <br>
 
 <h1><em><b><u>Welcome to Registration</u> </b></em></h1> <br><br>
@@ -17,6 +17,7 @@
   {{userform|crispy}}
   {{studentform|crispy}}
   {{facultyform|crispy}}
+  
 
   <div class="text-center">
     <input type="submit" class="btn btn-success btn-lg" value="Submit" name="submit">
@@ -24,4 +25,8 @@
 </form>
 
 </div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'js/username.js' %}"></script>
 {% endblock %}

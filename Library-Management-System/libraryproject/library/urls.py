@@ -16,17 +16,19 @@ urlpatterns = [
   path('bookupdate/<int:pk>/', views.BookUpdate.as_view(), name='book_update'),
   path('bookdelete/<int:pk>/', views.BookDelete.as_view(), name='book_delete'),
   path('adminhome/', views.AdminHome.as_view(), name='admin_home'), 
+  
   path('studentlists/', views.StudentLists.as_view(), name='student_lists'),  
   path('facultylists/', views.FacultyLists.as_view(), name='faculty_lists'), 
   path('librarianlists/', views.LibrarianLists.as_view(), name='librarian_lists'), 
-  
+
   path('studentedit/<int:pk>/', views.StudentEdit.as_view(), name='student_edit'),
   path('facultyedit/<int:pk>/', views.FacultyEdit.as_view(), name='faculty_edit'),
   path('librarianedit/<int:pk>/', views.LibrarianEdit.as_view(), name='librarian_edit'),
+
   path('userdelete/<int:pk>/', views.UserDelete.as_view(), name='user_delete'),
 
   path('contact/', views.ContactView.as_view(), name='contact_us'),
-
+  path('ajax/validate_username/', views.validate_username, name='validate_username'),
 ]
 
 

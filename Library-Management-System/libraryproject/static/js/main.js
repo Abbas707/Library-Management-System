@@ -7,3 +7,6 @@ pass2.addEventListener('blur', function() {
     alert('Please enter same password!!!')
   }
 });
+
+
+
