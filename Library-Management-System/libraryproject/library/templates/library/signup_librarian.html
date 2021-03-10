@@ -22,3 +22,14 @@
 
 </div>
 {% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'js/username.js' %}"></script>
+
+  <script>
+    var TemplateVari = {
+      csrf_token: '{{csrf_token}}',
+    }
+  </script>
+  
+{% endblock %}

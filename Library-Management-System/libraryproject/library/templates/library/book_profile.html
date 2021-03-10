@@ -2,7 +2,7 @@
 
 {% block content %}
 
-
+{% load static %}
 
 <br> 
 <div class="container">
@@ -95,10 +95,16 @@
 								</div>
 								<div class="row">
 									<div class="col-md-6">
-										<label>Total no of copies</label>
+										<label>Total no of copies</label>  
 									</div>
 									<div class="col-md-6">
-										<p>{{book.no_of_copy}}</p>
+										{% if user.is_staff %}
+											<a href="#" id='minus' class="btn btn-danger btn-sm">-</a>
+                    {% endif %}
+                    <span id='copy'>{{book.no_of_copy}}</span>&nbsp;
+                    {% if user.is_staff %}
+											<a href="#" id='plus' class="btn btn-primary btn-sm">+</a>&nbsp;
+                    {% endif %}
 									</div>
 								</div>
 								<div class="row">
@@ -106,7 +112,7 @@
 										<label>Available copies</label>
 									</div>
 									<div class="col-md-6">
-										<p>{{book.available_copy}}</p>
+										<p><span id='avail'> {{book.available_copy}} </span></p>
 									</div>
 								</div>
 					</div>
@@ -164,3 +170,17 @@
 	</form>           
 </div>
 {% endblock %}
+
+{% if user.is_staff %}
+	{% block javascript %}
+		<script>
+			var TemplateVariable = {
+				url1: "{% url 'library:copy_increment' %}",
+				url2: "{% url 'library:copy_decrement' %}",
+				id: {{book.id}},
+				csrf_token: '{{csrf_token}}',
+			}
+		</script>
+		<script src="{% static 'js/bookProfile.js' %}"></script>
+	{% endblock %}
+{% endif %}
