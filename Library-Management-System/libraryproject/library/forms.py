@@ -85,8 +85,8 @@ class BookForm(forms.ModelForm):
   title = forms.CharField(widget=forms.TextInput(attrs={'placeholder':"Enter the title of the book"}))
   author = forms.CharField(widget=forms.TextInput(attrs={'placeholder':"Enter the author of the book"}))
   description = forms.CharField(widget=forms.Textarea(attrs={'placeholder':"Enter the description of the book"}))
-  no_of_copy = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder':"No of copies of books"}))
-  available_copy = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder':"Available copy of the book"}))
+  # no_of_copy = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder':"No of copies of books"}))
+  # available_copy = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder':"Available copy of the book"}))
   cover_pic = forms.ImageField(label='Cover photo')
 
   class Meta:

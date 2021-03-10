@@ -28,7 +28,9 @@ urlpatterns = [
   path('userdelete/<int:pk>/', views.UserDelete.as_view(), name='user_delete'),
 
   path('contact/', views.ContactView.as_view(), name='contact_us'),
-  path('ajax/validate_username/', views.validate_username, name='validate_username'),
+  path('ajax/validate_username/', views.validate_username.as_view(), name='validate_username'),
+  path('copy_increment/',views.CopyIncrement.as_view(), name='copy_increment'),
+  path('copy_decrement/',views.CopyDecrement.as_view(), name='copy_decrement'),
 ]
 
 

@@ -1,10 +1,13 @@
 $("#id_username").change(function () {
   var username = $(this).val();
+  // console.log(username)
 
   $.ajax({
     url: '/ajax/validate_username/',
+    method:'POST',
     data: {
-      'username': username
+      'username': username,
+      csrfmiddlewaretoken: TemplateVari.csrf_token,
     },
     dataType: 'json',
     success: function (data) {
@@ -13,5 +16,4 @@ $("#id_username").change(function () {
       }
     }
   });
-
 });

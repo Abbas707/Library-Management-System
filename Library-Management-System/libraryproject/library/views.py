@@ -211,7 +211,7 @@ class BookUpdate(View):
   def get(self, request, pk):
     book = Book.objects.get(id=pk)
     bookform = BookForm(instance=book)
-    return render(request, 'library/add_books.html', {'bookform':bookform})
+    return render(request, 'library/edit_books.html', {'bookform':bookform,'books':book})
 
   def post(self, request, pk):
     book = Book.objects.get(id=pk)
@@ -228,7 +228,7 @@ class BookUpdate(View):
       return redirect('library:book_profile', pk=book.pk)
     
     else:
-      return render(request, 'library/add_books.html', {'bookform':bookform})
+      return render(request, 'library/edit_books.html', {'bookform':bookform})
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -343,10 +343,29 @@ class UserDelete(View):
       return redirect('library:librarian_lists')
 
 
-
-def validate_username(request):
-    username = request.GET.get('username', None)
+class validate_username(View):
+  def post(self, request):
+    username = request.POST.get('username', None)
     data = {
-        'is_taken': User.objects.filter(username__iexact=username).exists()
+      'is_taken': User.objects.filter(username__iexact=username).exists()
     }
     return JsonResponse(data)
+
+
+class CopyIncrement(View):
+  def post(self,request):
+    pk = request.POST.get('id')        
+    book = Book.objects.get(id=pk)
+    book.no_of_copy += 1
+    book.available_copy += 1
+    book.save()
+    return JsonResponse({'status':1, 'book_copy':book.no_of_copy,'avail':book.available_copy})
+
+class CopyDecrement(View):
+  def post(self,request):
+    pk = request.POST.get('id')        
+    book = Book.objects.get(id=pk)
+    book.no_of_copy -= 1
+    book.available_copy -= 1
+    book.save()
+    return JsonResponse({'status':1, 'book_copy':book.no_of_copy,'avail':book.available_copy})
