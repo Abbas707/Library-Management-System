@@ -10,7 +10,7 @@ urlpatterns = [
   path('login/', views.LoginView.as_view(), name='userlogin'),
   path('logout/', views.LogoutView.as_view(), name='userlogout'),
   path('profile/<int:pk>/', views.UserProfileView.as_view(), name='user_profile'),
-  path('booklists/', views.BookListsView.as_view(), name='book_lists'),
+  path('booklists/', views.BookLists.as_view(), name='book_lists'),
   path('addbook/', views.AddBook.as_view(), name='add_books'),  
   path('bookprofile/<int:pk>/', views.BookView.as_view(), name='book_profile'),
   path('bookupdate/<int:pk>/', views.BookUpdate.as_view(), name='book_update'),
@@ -29,8 +29,9 @@ urlpatterns = [
 
   path('contact/', views.ContactView.as_view(), name='contact_us'),
   path('ajax/validate_username/', views.validate_username.as_view(), name='validate_username'),
-  path('copy_increment/',views.CopyIncrement.as_view(), name='copy_increment'),
-  path('copy_decrement/',views.CopyDecrement.as_view(), name='copy_decrement'),
+
+
+  path('copy_incdec/',views.CopyIncDec.as_view(), name='copy_incdec'),
 ]
 
 

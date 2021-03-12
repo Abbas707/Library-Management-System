@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 {% load static %}
 
 <br> 
@@ -58,12 +57,15 @@
 					<a href="{% url 'library:book_update' pk=book.pk %}" class="btn btn-info btn-sm">Edit</a>&nbsp;
 					<a href="{% url 'library:book_delete' pk=book.pk %}" class="btn btn-info btn-sm" onclick="if (!confirm('Are you sure?')) { return false }">Delete</a>&nbsp;	
 				{% endif %}
+
+				{% if not user.is_staff %}
+				<a href="" class="btn btn-primary btn-sm">Issue Book</a>&nbsp;
+				{% endif %}
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="profile-work">
-					
 				</div>
 			</div>
 			<div class="col-md-8">
@@ -175,8 +177,7 @@
 	{% block javascript %}
 		<script>
 			var TemplateVariable = {
-				url1: "{% url 'library:copy_increment' %}",
-				url2: "{% url 'library:copy_decrement' %}",
+				url: "{% url 'library:copy_incdec' %}",
 				id: {{book.id}},
 				csrf_token: '{{csrf_token}}',
 			}

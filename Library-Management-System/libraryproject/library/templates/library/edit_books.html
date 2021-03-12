@@ -26,8 +26,7 @@
 {% block javascript %}
   <script>
     var TemplateVar = {
-      url1: "{% url 'library:copy_increment' %}",
-      url2: "{% url 'library:copy_decrement' %}",
+      url: "{% url 'library:copy_incdec' %}",
       id: {{books.id}},
       csrf_token: '{{csrf_token}}',
     }

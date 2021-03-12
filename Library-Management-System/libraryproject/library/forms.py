@@ -4,29 +4,8 @@ from django.core.exceptions import ValidationError
 from django.core import validators
 from django.contrib.auth.forms import UserCreationForm
 
-
-class RoleForm(forms.ModelForm):
-  ROLE_CHOICES = [
-    ('---------', '---------'),
-    ('Student', 'Student'),
-    ('Faculty', 'Faculty'),
-  ]
-  role = forms.ChoiceField(widget=forms.Select, choices=ROLE_CHOICES, initial='---------')
-
-  class Meta:
-    model = Role
-    fields = ('role',)
-
-
-class DepartmentForm(forms.ModelForm):
-
-  class Meta:
-    model = Department
-    fields = ('department',)
-
   
 class UserForm(UserCreationForm):
-
   first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter first name'}))
   last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter last name'}))
   username = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter username'}))
@@ -36,7 +15,7 @@ class UserForm(UserCreationForm):
 
   class Meta:
     model = User
-    fields = ('first_name', 'last_name', 'username', 'password1','password2','phone_no', 'profile_pic',)
+    fields = ('role', 'department', 'first_name', 'last_name', 'username', 'password1','password2','phone_no', 'profile_pic',)
 
 
 class UserFormOne(forms.ModelForm):
@@ -51,21 +30,18 @@ class UserFormOne(forms.ModelForm):
 
 
 class StudentForm(forms.ModelForm):
-
   class Meta:
     model = Student
     exclude = ('user',)
 
 
 class FacultyForm(forms.ModelForm):
-
   class Meta:
     model = Faculty
     exclude = ('user',)
 
 
 class LibrarianForm(forms.ModelForm):
-
   class Meta:
     model = Librarian
     exclude = ('user',)

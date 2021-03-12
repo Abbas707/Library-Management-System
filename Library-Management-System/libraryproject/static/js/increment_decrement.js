@@ -14,14 +14,15 @@ $(function()
       // console.log({{books.id}}) 
 
       $.ajax({
-          url: TemplateVar.url1,
+          url: TemplateVar.url,
           method:'POST',
           data: {
               id: TemplateVar.id,
               csrfmiddlewaretoken: TemplateVar.csrf_token,
+              symbol: 'plus'
             },
           success:function(data){
-              console.log(data.status)
+               // console.log(data.status)
               if(data.status == "1"){
                   x.val(data.book_copy);
                   y.val(data.avail);
@@ -42,11 +43,12 @@ $(function()
       //console.log({{books.id}})
       
       $.ajax({
-          url: TemplateVar.url2,
+          url: TemplateVar.url,
           method:'POST',
           data: {
               id: TemplateVar.id,
               csrfmiddlewaretoken: TemplateVar.csrf_token,
+              symbol: 'minus'
             },
           success: function(data){
               console.log(data.status)

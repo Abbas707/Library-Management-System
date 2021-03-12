@@ -9,14 +9,15 @@ $(function()
     $('#plus').on('click',function() {
 
       $.ajax({
-          url: TemplateVariable.url1,
+          url: TemplateVariable.url,
           method:'POST',
           data: {
               id: TemplateVariable.id,
               csrfmiddlewaretoken: TemplateVariable.csrf_token,
+              symbol: 'plus'
             },
           success:function(data){
-              console.log(data.status)
+              // console.log(data.status)
               if(data.status == "1"){
                   x.text(data.book_copy);
                   y.text(data.avail);
@@ -36,14 +37,15 @@ $(function()
       }
       
       $.ajax({
-          url: TemplateVariable.url2,
+          url: TemplateVariable.url,
           method:'POST',
           data: {
               id: TemplateVariable.id,
               csrfmiddlewaretoken: TemplateVariable.csrf_token,
+              symbol: 'minus'
             },
           success: function(data){
-              console.log(data.status)
+              //console.log(data.status)
               if(data.status == "1"){
                   x.text(data.book_copy);
                   y.text(data.avail);

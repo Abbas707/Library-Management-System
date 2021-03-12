@@ -10,7 +10,7 @@ $("#id_username").change(function () {
       csrfmiddlewaretoken: TemplateVari.csrf_token,
     },
     dataType: 'json',
-    success: function (data) {
+    success: function(data) {
       if (data.is_taken) {
         alert("A user with this username already exists.");
       }
