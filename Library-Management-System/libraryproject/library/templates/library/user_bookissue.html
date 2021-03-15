@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+<div class="container">
+  <br>
+  <h4 style="color:#ffffff"><b><center> Books Issued by You!! </center></b></h4>
+
+	<table class="table table-striped table-hover" style="background-color:#c9d2db">
+
+    {% if user.role.role == 'Student' or user.role.role == 'Faculty' %}
+		<thead class="thead-light">
+			<tr>
+				<th>Title</th>
+				<th>Issue Date</th>
+				<th>Due Date</th>
+        <th>Book Return</th>
+			</tr>
+		</thead>
+		<tbody>
+      {% for book in books_issued %}
+			<tr>
+				<td> {{book.book.title}} </td>
+				<td> {{book.issue_date}} </td>
+				<td> {{book.due_date}} </td>
+        <td><a href="" class="btn btn-danger btn-sm" onclick="if (!confirm('Are you sure to return?')) { return false }">Return</a>&nbsp;</td>
+			</tr>
+			{% endfor %}
+    {% endif %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

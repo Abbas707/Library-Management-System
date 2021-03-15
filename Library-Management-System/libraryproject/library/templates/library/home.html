@@ -25,18 +25,27 @@
                         </div>
                     </div>
 
-                    <div class="mx-3 mt-1 mb-3"><a href="{% url 'library:book_profile' book.id %}" class="btn btn-danger btn-block"><small>Book Details</small></a></div> <small class="d-flex justify-content-center text-muted">*Available</small>
+                    <div class="mx-3 mt-1 mb-3"><a href="{% url 'library:book_profile' book.id %}" class="btn btn-danger btn-block"><small>Book Details</small></a></div> <div class="d-flex justify-content-center text-muted">
+                        <p id="randomtxt" style="color:rgb(3, 170, 3); margin-bottom: 1px;">
+                        {% if book.available_copy < 1 %} 
+                        <span style="color:red;"> Unavailable </span>
+                        {% else %}
+                        *Available
+                        {% endif %}
+                        </p>
+                  
+                    </div>
+                    
                 </div>
             </div>
         </div>
         {% endfor %}
-
     </div>
 </div>
 
 
 {% if is_paginated %}
-<nav aria-label="Page navigation conatiner"></nav>
+<nav aria-label="Page navigation container"></nav>
 <ul class="pagination justify-content-center">
 {% if page_obj.has_previous %}
 <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV </a></li>
@@ -49,14 +58,5 @@
 </div>
 {% endif %}
 
-
-
-
-
-
-
-
-
-
-
 {% endblock %}
+

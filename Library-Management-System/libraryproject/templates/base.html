@@ -4,15 +4,17 @@
 <html lang="en">
 <head>
   {% comment %} Bootstrap css {% endcomment %}
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="{% static 'js/myjQuery.js' %}"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href='{% static "css/style.css" %}'>
   <link rel="stylesheet" type="text/css" href='{% static "css/mainn.css" %}'>
   <link rel="stylesheet" type="text/css" href='{% static "css/book_profile.css" %}'>
+
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js" integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD" crossorigin="anonymous"></script>
   
   <title> Library Management system </title>
+  {% block css %} {% endblock %}
 </head>
 
 <body id='page1'>
@@ -53,6 +55,12 @@
           <a class="nav-link" href="{% url 'library:user_profile' user.id %}"> Profile <span class="sr-only">(current)</span></a>
         </li>
 
+        {% if not user.is_staff %}
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'library:user_book_issue' user.id %}"> View Issued Books</a>
+        </li>
+        {% endif %}
+
         {% else %}
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'library:userlogin' %}"> Login </a>
@@ -68,6 +76,8 @@
           </div>
         </li>
         {% endif %}
+
+    
       </ul>
    
     </div>

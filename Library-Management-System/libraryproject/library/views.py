@@ -13,6 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from libraryproject.settings import EMAIL_HOST_USER,EMAIL_HOST_PASSWORD
 from django.http import JsonResponse
 from django.core.mail import send_mail
+from django.db.models import Q
 
 # E-mail functionality
 @method_decorator(login_required, name='dispatch')
@@ -35,7 +36,7 @@ class ContactView(View):
 # Create your views here.
 @method_decorator(login_required, name='dispatch')
 class HomeView(ListView):
-  queryset = Book.objects.all()[::-1]
+  queryset = Book.objects.all()
   template_name = 'library/home.html'
   context_object_name = "books"
   paginate_by = 8
@@ -72,14 +73,13 @@ class SignupView(View):
       return redirect('library:user_profile', pk=user.id)
 
     else:
-        return render(request, 'library/signup.html', {'userform': userform, 'departmentform':deptform, 'roleform':roleform})
+      return render(request, 'library/signup.html', {'userform':userform, 'studentform':studentform,'facultyform':facultyform})
 
 
 class LibrarianSignup(View):
   def get(self, request):
     userform = UserForm()
     librarianform = LibrarianForm()
-
     return render(request, 'library/signup_librarian.html', {'userform':userform, 'librarianform':librarianform})
   
 
@@ -90,7 +90,7 @@ class LibrarianSignup(View):
     if userform.is_valid() and librarianform.is_valid():
       user = userform.save(commit=False)
 
-      role1 = Role.objects.filter(role='Librarian').first()
+      role1 = Role.objects.filter(role='Librarian')
       user.role = role1
 
       user.save()
@@ -98,8 +98,7 @@ class LibrarianSignup(View):
       librarian.user = user
       librarian.save()
 
-      login_userr = authenticate(username=userform.cleaned_data['username'], password=userform.cleaned_data['password1'])
-      login(request, login_userr)
+      login(request, user)
       return redirect('library:user_profile', pk=user.id)
 
     else:
@@ -151,7 +150,7 @@ class UserProfileView(LoginRequiredMixin,View):
 
 
 
-# Admin Part CRUD
+# Admin Part Book CRUD
 @method_decorator(staff_member_required, name='dispatch')
 class AddBook(View):
   def get(self, request):
@@ -193,7 +192,7 @@ class BookUpdate(View):
   def get(self, request, pk):
     book = Book.objects.get(id=pk)
     bookform = BookForm(instance=book)
-    return render(request, 'library/edit_books.html', {'bookform':bookform,'books':book})
+    return render(request, 'library/edit_books.html', {'bookform':bookform, 'books':book})
 
 
   def post(self, request, pk):
@@ -236,7 +235,7 @@ class StudentLists(ListView):
   template_name = 'library/student_lists.html'
   ordering = ['id']
   context_object_name = "students"
-  paginate_by = 2
+  paginate_by = 10
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -244,7 +243,7 @@ class FacultyLists(ListView):
   queryset = Faculty.objects.all().order_by('id')
   template_name = 'library/faculty_lists.html'
   context_object_name = "faculty"
-  paginate_by = 2
+  paginate_by = 10
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -252,67 +251,31 @@ class LibrarianLists(ListView):
   queryset = Faculty.objects.all().order_by('id')
   template_name = 'library/librarian_lists.html'
   context_object_name = "librarian"
-  paginate_by = 2
+  paginate_by = 10
 
 
+class UserUpdate(LoginRequiredMixin, View):
+    login_url = '/login/'
 
-@method_decorator(staff_member_required, name='dispatch')
-class StudentEdit(View):
-  def get(self, request, pk):
-    student = User.objects.get(id=pk)
-    userform = UserFormOne(instance=student)
-    return render(request, 'library/signup.html', {'userform': userform})
+    def get(self,request,pk):
+        user = User.objects.get(id=pk)
+        userform = UserFormOne(instance=user)
 
-  def post(self, request, pk):
-    student = User.objects.get(id=pk)
-    userform = UserFormOne(request.POST, request.FILES, instance=student)
-    
-    if userform.is_valid():
-      student = userform.save(commit=False)
-      student.save()
-      return redirect('library:student_lists')
-    else:
-      return redirect('library:student_edit', pk=student.pk)
+        return render(request,'library/update.html',{'userform': userform,})
 
+    def post(self,request,pk):
+        user = User.objects.get(id=pk)
+        userform = UserFormOne(request.POST, request.FILES, instance=user)
 
-@method_decorator(staff_member_required, name='dispatch')
-class FacultyEdit(View):
-  def get(self, request, pk):
-    faculty = User.objects.get(id=pk)
-    userform = UserFormOne(instance=faculty)
-    return render(request, 'library/signup.html', {'userform': userform})
+        if userform.is_valid():
+          user1 = userform.save(commit=False)
+          user1.save()
+          messages.success(request,'User Updated Successfully')
+          return redirect('library:user_update',pk=user1.id)
 
-  def post(self, request, pk):
-    faculty = User.objects.get(id=pk)
-    userform = UserFormOne(request.POST, request.FILES, instance=faculty)
-    
-    if userform.is_valid():
-      faculty = userform.save(commit=False)
-      faculty.save()
-      return redirect('library:faculty_lists')
-    
-    else:
-      return redirect('library:faculty_edit', pk=faculty.pk)
+        else:
+            return render(request,'library/signin.html',{'userform':userform})
 
-
-@method_decorator(staff_member_required, name='dispatch')
-class LibrarianEdit(View):
-  def get(self, request, pk):
-    librarian = User.objects.get(id=pk)
-    userform = UserFormOne(instance=librarian)
-    return render(request, 'library/signup.html', {'userform': userform})
-
-  def post(self, request, pk):
-    librarian = User.objects.get(id=pk)
-    userform = UserFormOne(request.POST, request.FILES, instance=librarian)
-    
-    if userform.is_valid():
-      librarian = userform.save(commit=False)
-      librarian.save()
-      return redirect('library:librarian_lists')
-    
-    else:
-      return redirect('library:librarian_edit', pk=librarian.pk)
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -356,4 +319,53 @@ class CopyIncDec(View):
     return JsonResponse({'status':1, 'book_copy':book.no_of_copy, 'avail':book.available_copy})
 
 
+
+# Book Issue
+class BookRecords(ListView):
+  queryset = BookRecord.objects.all().order_by('id')
+  template_name = 'library/book_records.html'
+  context_object_name = "books"
+  paginate_by = 10
+
+
+class BookIssue(View):
+  def post(self, request):
+    pk_user = request.POST.get('user_id')
+    pk_book = request.POST.get('book_id')
+
+    user = User.objects.get(id=pk_user)
+    book = Book.objects.get(id=pk_book)
+
+    # getting all the records from BookRecord for requested book
+    all_book_records = BookRecord.objects.filter(book__title__iexact=book.title)
+
+    # check if currentuser with requested book is already in BookRecords or not
+    # or check if book title is occupied by another user
+    for cur_user in all_book_records:
+      if cur_user.user.username == user.username and cur_user.return_date == None:
+        print("Book Already Issued")
+        return JsonResponse({'status':0, 'msg':'Book Already Issued by You'})
+    
+    # getting all the user records from BookRecord for current user
+    all_user_records = BookRecord.objects.filter(Q(user__username__iexact=user.username) & Q(return_date=None))
+
+    # check if current user has issued book more than 3
+    if all_user_records.count() > 2:
+      print("Cannot issue book more than 3")
+      return JsonResponse({'status':2, 'msg':'You cannot Issue book more than 3!!'})
+
+    record = BookRecord.objects.create(book=book,user=user)
+    record.book_due_date()
+    record.save()
+    book.available_copy -= 1
+    book.save()
+
+    return JsonResponse({'avail':book.available_copy})
+
+
+class UserBookIssue(View):
+  def get(self, request, pk):
+    user = User.objects.get(id=pk)
+    books_issued = BookRecord.objects.filter(Q(user__username__iexact=user.username) & Q(return_date=None))
+    return render(request, 'library/user_bookissue.html', {'user':user, 'books_issued':books_issued})
 

@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
-
-{% block content %}
 {% load static %}
 
+{% block content %}
 <br> 
 <div class="container">
 {% if messages %}
@@ -23,7 +22,7 @@
 {% endif %}
 
 <div class="container emp-profile">
-	<form method="post">
+
 		<div class="row">
 			<div class="col-md-4">
 				{% if book.cover_pic %}
@@ -41,7 +40,11 @@
 							<h6>
 								
 							</h6>
-							<p class="proile-rating">RANKINGS : <span>8/10</span></p>
+
+							<p class="proile-rating">ID: <span id='book-id'><small>{{book.id}}</small></span></p>
+							<input type='hidden' id='user-id' value={{request.user.id}}>
+							<input type='hidden' id='csr' value={{csrf_token}}>
+
 					<ul class="nav nav-tabs" id="myTab" role="tablist">
 						<li class="nav-item">
 							<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
@@ -59,7 +62,7 @@
 				{% endif %}
 
 				{% if not user.is_staff %}
-				<a href="" class="btn btn-primary btn-sm">Issue Book</a>&nbsp;
+					<button class="btn btn-primary btn-sm" id='issue-book'>Issue Book</button>
 				{% endif %}
 			</div>
 		</div>
@@ -97,7 +100,7 @@
 								</div>
 								<div class="row">
 									<div class="col-md-6">
-										<label>Total no of copies</label>  
+										<label>Number of copies</label>  
 									</div>
 									<div class="col-md-6">
 										{% if user.is_staff %}
@@ -168,20 +171,19 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</form>           
+		</div>          
 </div>
 {% endblock %}
 
-{% if user.is_staff %}
-	{% block javascript %}
-		<script>
-			var TemplateVariable = {
-				url: "{% url 'library:copy_incdec' %}",
-				id: {{book.id}},
-				csrf_token: '{{csrf_token}}',
-			}
-		</script>
-		<script src="{% static 'js/bookProfile.js' %}"></script>
-	{% endblock %}
-{% endif %}
+
+{% block javascript %}
+	<script>
+		var TemplateVariable = {
+			url: "{% url 'library:copy_incdec' %}",
+			id: {{book.id}},
+			csrf_token: '{{csrf_token}}',
+		}
+	</script>
+	<script src="{% static 'js/bookProfile.js' %}"></script>
+	<script src="{% static 'js/bookIssue.js' %}"> </script>
+{% endblock %}
