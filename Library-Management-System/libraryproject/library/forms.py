@@ -12,10 +12,12 @@ class UserForm(UserCreationForm):
   password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'placeholder':'Enter Password'}))
   password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(attrs={'placeholder':'Confirm Password'}))
   phone_no = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter contact number'}))
+  email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'Enter your mail'}))
+
 
   class Meta:
     model = User
-    fields = ('role', 'department', 'first_name', 'last_name', 'username', 'password1','password2','phone_no', 'profile_pic',)
+    fields = ('role', 'department', 'first_name', 'last_name', 'email', 'username', 'password1','password2','phone_no', 'profile_pic',)
 
 
 class UserFormOne(forms.ModelForm):

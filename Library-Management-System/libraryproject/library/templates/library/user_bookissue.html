@@ -26,7 +26,7 @@
 				<td> {{book.book.title}} </td>
 				<td> {{book.issue_date}} </td>
 				<td> {{book.due_date}} </td>
-        <td><a href="" class="btn btn-danger btn-sm" onclick="if (!confirm('Are you sure to return?')) { return false }">Return</a>&nbsp;</td>
+        <td><a href="{% url 'library:user_book_return' id=book.id %}" class="btn btn-danger btn-sm" onclick="if (!confirm('Are you sure to return?')) { return false }">Return</a>&nbsp;</td>
 			</tr>
 			{% endfor %}
     {% endif %}

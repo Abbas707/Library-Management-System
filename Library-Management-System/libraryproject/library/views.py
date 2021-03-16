@@ -14,6 +14,9 @@ from libraryproject.settings import EMAIL_HOST_USER,EMAIL_HOST_PASSWORD
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.db.models import Q
+import datetime
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # E-mail functionality
 @method_decorator(login_required, name='dispatch')
@@ -33,13 +36,20 @@ class ContactView(View):
     return render(request, 'library/contact.html',{'form':form})
 
 
-# Create your views here.
+
 @method_decorator(login_required, name='dispatch')
-class HomeView(ListView):
-  queryset = Book.objects.all()
-  template_name = 'library/home.html'
-  context_object_name = "books"
-  paginate_by = 8
+class HomeView(View):
+  def get(self, request):
+    book_list = Book.objects.all().order_by('id')
+    paginator = Paginator(book_list, 6)
+    page_number = request.GET.get('page',1)   #page number
+    try:
+      books = paginator.page(page_number)
+    except PageNotAnInteger:
+      books = paginator.page(1)       # if page is not an integer deliver the past page means landing page
+    except EmptyPage: 
+      books = paginator.page(paginator.num_pages)  # if page is out of range deliver last page of results 
+    return render(request, 'library/home.html', {'books':books})
 
 
 class SignupView(View):
@@ -47,7 +57,7 @@ class SignupView(View):
     userform = UserForm()
     studentform = StudentForm()
     facultyform = FacultyForm()
-    return render(request, 'library/signup.html', {'userform':userform, 'studentform':studentform,'facultyform':facultyform})
+    return render(request, 'library/signup.html', {'userform':userform, 'studentform':studentform, 'facultyform':facultyform})
 
 
   def post(self, request):
@@ -61,6 +71,11 @@ class SignupView(View):
     userform = UserForm(request.POST, request.FILES)
 
     if userform.is_valid() and usertype.is_valid():
+      subject = 'Welcome to Online Library Management System'
+      message = 'Hope you are enjoying!!'
+      recepient = str(userform['email'].value())
+      send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
+
       user = userform.save(commit=False)
       user.save()
 
@@ -72,8 +87,6 @@ class SignupView(View):
       login(request, user)
       return redirect('library:user_profile', pk=user.id)
 
-    else:
-      return render(request, 'library/signup.html', {'userform':userform, 'studentform':studentform,'facultyform':facultyform})
 
 
 class LibrarianSignup(View):
@@ -88,9 +101,14 @@ class LibrarianSignup(View):
     librarianform = LibrarianForm(request.POST)
 
     if userform.is_valid() and librarianform.is_valid():
+      subject = 'Welcome to Online Library Management System'
+      message = 'Hope you are enjoying!!'
+      recepient = str(userform['email'].value())
+      send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
+
       user = userform.save(commit=False)
 
-      role1 = Role.objects.filter(role='Librarian')
+      role1 = Role.objects.get(role='Librarian')
       user.role = role1
 
       user.save()
@@ -248,10 +266,11 @@ class FacultyLists(ListView):
 
 @method_decorator(staff_member_required, name='dispatch')
 class LibrarianLists(ListView):
-  queryset = Faculty.objects.all().order_by('id')
+  queryset = Librarian.objects.all().order_by('id')
   template_name = 'library/librarian_lists.html'
   context_object_name = "librarian"
   paginate_by = 10
+
 
 
 class UserUpdate(LoginRequiredMixin, View):
@@ -277,7 +296,6 @@ class UserUpdate(LoginRequiredMixin, View):
             return render(request,'library/signin.html',{'userform':userform})
 
 
-
 @method_decorator(staff_member_required, name='dispatch')
 class UserDelete(View):
   def get(self, request, pk):
@@ -293,7 +311,7 @@ class UserDelete(View):
       return redirect('library:librarian_lists')
 
 
-class validate_username(View):
+class ValidateUsername(View):
   def post(self, request):
     username = request.POST.get('username', None)
     data = {
@@ -328,6 +346,7 @@ class BookRecords(ListView):
   paginate_by = 10
 
 
+@method_decorator(login_required, name='dispatch')
 class BookIssue(View):
   def post(self, request):
     pk_user = request.POST.get('user_id')
@@ -363,9 +382,35 @@ class BookIssue(View):
     return JsonResponse({'avail':book.available_copy})
 
 
+@method_decorator(login_required, name='dispatch')
 class UserBookIssue(View):
   def get(self, request, pk):
     user = User.objects.get(id=pk)
     books_issued = BookRecord.objects.filter(Q(user__username__iexact=user.username) & Q(return_date=None))
     return render(request, 'library/user_bookissue.html', {'user':user, 'books_issued':books_issued})
+
+
+@method_decorator(login_required, name='dispatch')
+class UserBookReturn(View):
+  def get(self, request, id):
+    current_book = BookRecord.objects.get(id=id)
+    current_book.return_date = datetime.datetime.now()
+    current_book.save()
+
+    mybook = Book.objects.get(title=current_book.book)
+    mybook.available_copy += 1
+    mybook.save()
+    messages.info(request, "Book returned successfully!!")
+
+    return HttpResponseRedirect('/home')
+
+
+
+@method_decorator(login_required, name='dispatch')
+class BookSearch(View):
+  def get(self, request):
+    title = request.GET.get('search_book')
+    book = Book.objects.filter(title__icontains=title)
+    # print(book)
+    return render(request,'library/book_search.html',{'books':book})
 
