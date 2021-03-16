@@ -11,7 +11,6 @@
 {% endblock %}
 
 
-
 {% block content %}
 <br>
 <div class="container">
@@ -64,8 +63,8 @@
         {% endfor %}
     </div>
 
-
 </div>
+
 
 
 <div class='container'>
@@ -73,7 +72,7 @@
     <ul style='padding-left:40%' class="pagination">
         {% if books.has_previous %}
         <li style='margin-left:10px;'><a href="?page={{ books.previous_page_number }}"><button type="button"
-                    class="btn btn-primary">
+                    class="active btn btn-info">
                     &laquo;</button> </a></li>
         {% else %}
         <li class="disabled">
@@ -84,17 +83,17 @@
         {% for i in books.paginator.page_range %}
         {% if books.number == i %}
         <li style='margin-left:10px;' class="active">
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-info">
                 <span>{{ i }} <span class="sr-only"></span></span></button>
         </li>
         {% else %}
         <li style='margin-left:10px;'><a href="?page={{ i }}">
-                <button type="button" class="btn btn-primary">{{ i }}</button></a></li>
+                <button type="button" class="btn btn-info">{{ i }}</button></a></li>
         {% endif %}
         {% endfor %}
         {% if books.has_next %}
         <li style='margin-left:10px;'><a href="?page={{ books.next_page_number }}">
-                <button type="button" class="btn btn-primary">&raquo;</button></a></li>
+                <button type="button" class="btn btn-info">&raquo;</button></a></li>
         {% else %}
         <li style='margin-left:10px;' class="disabled"><button type="button" class="btn btn-danger">
                 &raquo;</button></li>
@@ -103,5 +102,7 @@
     </ul>
     {% endif %}
 </div>
+
+
 
 {% endblock %}

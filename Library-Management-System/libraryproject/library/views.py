@@ -61,6 +61,9 @@ class SignupView(View):
 
 
   def post(self, request):
+    studentform = StudentForm()
+    facultyform = FacultyForm()
+
     user_role = {
             '1': StudentForm(request.POST),
             '2': FacultyForm(request.POST),
@@ -71,8 +74,8 @@ class SignupView(View):
     userform = UserForm(request.POST, request.FILES)
 
     if userform.is_valid() and usertype.is_valid():
-      subject = 'Welcome to Online Library Management System'
-      message = 'Hope you are enjoying!!'
+      subject = 'Welcome to Library Management System.'
+      message = 'Thanks for Signing In! Hope you will enjoy our services!!'
       recepient = str(userform['email'].value())
       send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
 
@@ -86,6 +89,11 @@ class SignupView(View):
       # login user
       login(request, user)
       return redirect('library:user_profile', pk=user.id)
+
+    else:
+      return render(request, 'library/signup.html', {'userform':userform, 'studentform':studentform, 'facultyform':facultyform})
+
+    
 
 
 
@@ -320,6 +328,15 @@ class ValidateUsername(View):
     return JsonResponse(data)
 
 
+class ValidateEmail(View):
+  def post(self, request):
+    email = request.POST.get('email', None)
+    data = {
+      'is_taken': User.objects.filter(email__iexact=email).exists()
+    }
+    return JsonResponse(data)
+
+
 class CopyIncDec(View):
   def post(self, request):
     pk = request.POST.get('id')
@@ -414,3 +431,16 @@ class BookSearch(View):
     # print(book)
     return render(request,'library/book_search.html',{'books':book})
 
+
+
+class AutoCompleteView(View):
+  def get(self, request):
+    if 'term' in request.GET:
+      queryset = BookRecord.objects.filter(book__title__icontains=request.GET.get('term'))
+      # print(queryset)
+      titles = list()
+
+      for book in queryset:
+        titles.append(book.book.title)
+
+      return JsonResponse(titles, safe=False)

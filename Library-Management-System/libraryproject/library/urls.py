@@ -27,6 +27,8 @@ urlpatterns = [
 
   path('contact/', views.ContactView.as_view(), name='contact_us'),
   path('validate_username/', views.ValidateUsername.as_view(), name='validate_username'),
+  path('validate_email/', views.ValidateEmail.as_view(), name='validate_email'),
+
   path('copy_incdec/', views.CopyIncDec.as_view(), name='copy_incdec'),
 
   path('book_records/', views.BookRecords.as_view(), name='book_records'),
@@ -34,6 +36,8 @@ urlpatterns = [
   path('user_book_issue/<int:pk>/' ,views.UserBookIssue.as_view(), name='user_book_issue'),
   path('user_book_return/<int:id>/' ,views.UserBookReturn.as_view(), name='user_book_return'),
   path('search_book/',views.BookSearch.as_view(), name='search_book'),
+
+  path('autocomplete/',views.AutoCompleteView.as_view(), name='autocomplete'),
 
 ] 
 
