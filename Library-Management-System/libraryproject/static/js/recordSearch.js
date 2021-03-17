@@ -7,6 +7,7 @@ $(function(){
     if (record != "") {
       $.ajax ({
         url: '/search_record/',
+        method: 'GET',
         data: {
           title: record
         },

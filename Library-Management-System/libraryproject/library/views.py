@@ -415,6 +415,7 @@ class UserBookReturn(View):
     current_book.save()
 
     mybook = Book.objects.get(title=current_book.book.title)
+
     mybook.available_copy += 1
     mybook.save()
     messages.info(request, "Book returned successfully!!")
