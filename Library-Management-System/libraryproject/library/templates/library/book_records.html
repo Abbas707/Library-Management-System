@@ -6,20 +6,22 @@
 
 <br>
 
-<div class="container">
-  <div class="input-group" style="width: 30%">
+<div class="contain">
+  <div class="input-group" style="width: 100%">
     <input type="search" id="search" class="form-control rounded" placeholder="Search" aria-label="Search"
       aria-describedby="search-addon" />
-    <button type="button" class="btn btn-outline-primary"> Search </button>
   </div>
+</div>
   
 <br> 
-  <table class="table table-striped" style="background-color:#c9d2db">
+
+<div class="container" id="mycontain">
+  <table class="table table-striped" id='pre-table' style="background-color:#c9d2db">
   <thead class="thead-light">
     <tr>
       <th scope="col">ID</th>
       <th scope="col">User</th>
-      <th scope="col">Role</th>
+
       <th scope="col">Title</th>
       <th scope="col">Issue Date</th>
       <th scope="col">Due date</th>
@@ -32,7 +34,7 @@
     <tr>
       <td>{{book.id}}</td>
       <td>{{book.user}}</td>
-      <td>{{book.user.role}}</td>
+      
       <td>{{book.book.title}}</td>
       <td>{{book.issue_date}}...</td>
       <td>{{book.due_date}}</td>
@@ -70,6 +72,8 @@
 
 {% block javascript %}
   <script src="{% static 'js/bookRecords.js' %}"> </script>
+  <script src="{% static 'js/recordSearch.js' %}"> </script>
+
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

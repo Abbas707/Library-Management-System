@@ -414,7 +414,7 @@ class UserBookReturn(View):
     current_book.return_date = datetime.datetime.now()
     current_book.save()
 
-    mybook = Book.objects.get(title=current_book.book)
+    mybook = Book.objects.get(title=current_book.book.title)
     mybook.available_copy += 1
     mybook.save()
     messages.info(request, "Book returned successfully!!")
@@ -432,7 +432,6 @@ class BookSearch(View):
     return render(request,'library/book_search.html',{'books':book})
 
 
-
 class AutoCompleteView(View):
   def get(self, request):
     if 'term' in request.GET:
@@ -444,3 +443,29 @@ class AutoCompleteView(View):
         titles.append(book.book.title)
 
       return JsonResponse(titles, safe=False)
+
+
+class RecordSearch(LoginRequiredMixin, View):
+  login_url = '/login/'
+
+  def get(self, request):
+    title = request.GET.get('title')
+    book_record = BookRecord.objects.filter(book__title__icontains=title)
+    # print(len(book_record))
+    record_search = []
+
+    for record in book_record:
+      details = {
+        'id':record.id,
+        'title':record.book.title,
+        'user':record.user.username,
+        'issue_date':record.issue_date,
+        'due_date':record.due_date,
+        'return_date':record.return_date,
+      }
+      record_search.append(details)
+
+      # print(record_search)
+
+    return JsonResponse({'records':record_search})
+

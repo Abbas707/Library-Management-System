@@ -38,6 +38,7 @@ urlpatterns = [
   path('search_book/',views.BookSearch.as_view(), name='search_book'),
 
   path('autocomplete/',views.AutoCompleteView.as_view(), name='autocomplete'),
+  path('search_record/',views.RecordSearch.as_view(), name='search_record'),
 
 ] 
 
