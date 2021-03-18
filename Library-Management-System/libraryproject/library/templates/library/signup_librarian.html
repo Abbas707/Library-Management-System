@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% load crispy_forms_tags %}
+{% block content %}
+
+<br>
+
+<h1><em><b><u>Welcome to Librarian Registration</u> </b></em></h1> <br><br>
+
+<div class="contain">
+<form class="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  {{userform|crispy}}
+  {{librarianform|crispy}}
+   
+  <div class="text-center">
+    <input type="submit" class="btn btn-success btn-lg" value="Submit" name="submit">
+  </div>
+</form>
+
+</div>
+{% endblock %}

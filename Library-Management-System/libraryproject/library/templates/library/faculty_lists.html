@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+<br>
+<h4 style="color:#1e6cb9"><b><center> List of Faculties </center></b></h4>
+
+  <table class="table table-striped" style="background-color:#c9d2db">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">UserName</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Department</th>
+      <th scope="col">Phone Number</th>
+      <th scope="col">Profile pic</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+
+  {% for faculty in faculty %}
+    <tr>
+      <td><a href="{% url 'library:user_profile' faculty.user.id %}">{{faculty.user.username}}</a></td>
+      <td>{{faculty.user.first_name}}</td>
+      <td>{{faculty.user.last_name}}</td>
+      <td>{{faculty.user.department}}</td>
+      <td>{{faculty.user.phone_no}}</td>
+      <td>{{librarian.user.profile_pic}}</td>
+      <td><a href="{% url 'library:faculty_edit' faculty.user.id %}" class="btn btn-info btn-sm">Edit</a>&nbsp; </td>
+      <td><a href="{% url 'library:user_delete' faculty.user.id %}" class="btn btn-danger btn-sm" onclick="if (!confirm('Are you sure?')) { return false }">Delete</a>&nbsp; </td>
+    </tr>
+
+  {% endfor %}
+
+  </tbody>
+</table>
+</body>
+</div>
+
+{% endblock %}
