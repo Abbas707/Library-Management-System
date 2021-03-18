@@ -12,13 +12,10 @@
 <form class="" method="post" enctype="multipart/form-data">
   {% csrf_token %}
 
-  {{roleform|crispy}}
-  {{departmentform|crispy}}
   {{userform|crispy}}
   {{studentform|crispy}}
   {{facultyform|crispy}}
   
-
   <div class="text-center">
     <input type="submit" class="btn btn-success btn-lg" value="Submit" name="submit">
   </div>
@@ -27,6 +24,21 @@
 </div>
 {% endblock %}
 
+
 {% block javascript %}
   <script src="{% static 'js/username.js' %}"></script>
+
+  <script>
+    var TemplateVari = {
+      csrf_token: '{{csrf_token}}',
+    }
+  </script>
+
+  <script type='text/javascript'>
+    $(function(){
+      let role = $('#id_role').children()[3]
+      role.remove();
+    });
+  </script>
+  
 {% endblock %}

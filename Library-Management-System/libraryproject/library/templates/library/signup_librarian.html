@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-
+{% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
 
@@ -12,7 +12,13 @@
 <form class="" method="post" enctype="multipart/form-data">
   {% csrf_token %}
 
-  {{userform|crispy}}
+  {{userform.first_name|as_crispy_field}}
+  {{userform.last_name|as_crispy_field}}
+  {{userform.username|as_crispy_field}}
+  {{userform.password1|as_crispy_field}}
+  {{userform.password2|as_crispy_field}}
+  {{userform.phone_no|as_crispy_field}}
+  {{userform.profile_pic|as_crispy_field}}
   {{librarianform|crispy}}
    
   <div class="text-center">
@@ -21,4 +27,15 @@
 </form>
 
 </div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'js/username.js' %}"></script>
+
+  <script>
+    var TemplateVari = {
+      csrf_token: '{{csrf_token}}',
+    }
+  </script>
+  
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import ListView
 from library.forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
@@ -13,6 +14,7 @@ from libraryproject.settings import EMAIL_HOST_USER,EMAIL_HOST_PASSWORD
 from django.http import JsonResponse
 from django.core.mail import send_mail
 
+# E-mail functionality
 @method_decorator(login_required, name='dispatch')
 class ContactView(View):
   def get(self, request):
@@ -31,18 +33,12 @@ class ContactView(View):
 
 
 # Create your views here.
-@method_decorator(staff_member_required, name='dispatch')
-class BookListsView(View):
-  def get(self, request):
-    book = Book.objects.all()
-    return render(request, 'library/book_lists.html',{'books':book})
-
-
 @method_decorator(login_required, name='dispatch')
-class HomeView(View):
-  def get(self, request):
-    book = Book.objects.all()[::-1]
-    return render(request, 'library/home.html', {'books':book})
+class HomeView(ListView):
+  queryset = Book.objects.all()[::-1]
+  template_name = 'library/home.html'
+  context_object_name = "books"
+  paginate_by = 8
 
 
 class SignupView(View):
@@ -50,51 +46,31 @@ class SignupView(View):
     userform = UserForm()
     studentform = StudentForm()
     facultyform = FacultyForm()
-    deptform = DepartmentForm()
-    roleform = RoleForm()
-    return render(request, 'library/signup.html', {'userform':userform, 'studentform':studentform, 'departmentform':deptform, 'roleform':roleform, 'facultyform':facultyform})
+    return render(request, 'library/signup.html', {'userform':userform, 'studentform':studentform,'facultyform':facultyform})
 
 
   def post(self, request):
     user_role = {
-            'Student': StudentForm(request.POST),
-            'Faculty': FacultyForm(request.POST),
+            '1': StudentForm(request.POST),
+            '2': FacultyForm(request.POST),
           }
         
-    roleform = RoleForm(request.POST)
-        
-    if roleform.is_valid():
-      temp_role = roleform.cleaned_data['role']
-      usertype = user_role.get(temp_role)
-      
-      userform = UserForm(request.POST, request.FILES)
-      deptform = DepartmentForm(request.POST)
+    temp_role = request.POST.get('role')
+    usertype = user_role.get(temp_role)
+    userform = UserForm(request.POST, request.FILES)
 
-      if userform.is_valid() and usertype.is_valid() and deptform.is_valid() and roleform.is_valid():
+    if userform.is_valid() and usertype.is_valid():
+      user = userform.save(commit=False)
+      user.save()
 
-        role = roleform.save(commit=False)   
-        role1 = Role.objects.filter(role=role).first()
-        # saving user with department
-        user = userform.save(commit=False)
+      new_user = usertype.save(commit=False)
+      new_user.user = user
+      new_user.save()
 
-        # department and Role saved
-        dept = deptform.save(commit=False)
-        dept1 = Department.objects.filter(department=dept).first()
-        user.department = dept1
-    
-        user.role = role1
-        user.save()
+      # login user
+      login(request, user)
+      return redirect('library:user_profile', pk=user.id)
 
-        new_user = usertype.save(commit=False)
-        new_user.user = user
-        new_user.save()
-
-        login_userr = authenticate(username=userform.cleaned_data['username'], password=userform.cleaned_data['password1'])
-        login(request, login_userr)
-        return redirect('library:user_profile', pk=user.id)
-
-      else:
-        return render(request, 'library/signup.html', {'userform': userform, 'departmentform':deptform, 'roleform':roleform})
     else:
         return render(request, 'library/signup.html', {'userform': userform, 'departmentform':deptform, 'roleform':roleform})
 
@@ -140,10 +116,9 @@ class LoginView(View):
   def post(self, request):
     self.uname = request.POST['username']
     self.upass = request.POST['password']
-    # print(self.uname, self.upass)
-    self.user = authenticate(username=self.uname, password=self.upass)
-    # print(self.user)
 
+    self.user = authenticate(username=self.uname, password=self.upass)
+  
     if self.user:
       if self.user.is_active:
         login(request, self.user)
@@ -192,12 +167,19 @@ class AddBook(View):
       new_category = Category.objects.get(category=category)
       book.category = new_category
       book.save()
-      # return redirect('library:book_profile', pk=book.id)
       return redirect('library:book_lists')
 
     else:
       return render(request, 'library/add_books.html', {'bookform':bookform, 'categoryform':categoryform})
 
+
+@method_decorator(staff_member_required, name='dispatch')
+class BookLists(ListView):
+  queryset = Book.objects.all().order_by('id')
+  template_name = 'library/book_lists.html'
+  context_object_name = "books"
+  paginate_by = 5
+  
 
 @method_decorator(login_required, name='dispatch')
 class BookView(View):
@@ -211,7 +193,8 @@ class BookUpdate(View):
   def get(self, request, pk):
     book = Book.objects.get(id=pk)
     bookform = BookForm(instance=book)
-    return render(request, 'library/add_books.html', {'bookform':bookform})
+    return render(request, 'library/edit_books.html', {'bookform':bookform,'books':book})
+
 
   def post(self, request, pk):
     book = Book.objects.get(id=pk)
@@ -228,7 +211,7 @@ class BookUpdate(View):
       return redirect('library:book_profile', pk=book.pk)
     
     else:
-      return render(request, 'library/add_books.html', {'bookform':bookform})
+      return render(request, 'library/edit_books.html', {'bookform':bookform})
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -248,24 +231,28 @@ class AdminHome(View):
 
 
 @method_decorator(staff_member_required, name='dispatch')
-class StudentLists(View):
-  def get(self, request):
-    student = Student.objects.all()
-    return render(request, 'library/student_lists.html', {'students':student})
+class StudentLists(ListView):
+  queryset = Student.objects.all()
+  template_name = 'library/student_lists.html'
+  ordering = ['id']
+  context_object_name = "students"
+  paginate_by = 2
 
 
 @method_decorator(staff_member_required, name='dispatch')
-class FacultyLists(View):
-  def get(self, request):
-    faculty = Faculty.objects.all()
-    return render(request, 'library/faculty_lists.html', {'faculty':faculty})
+class FacultyLists(ListView):
+  queryset = Faculty.objects.all().order_by('id')
+  template_name = 'library/faculty_lists.html'
+  context_object_name = "faculty"
+  paginate_by = 2
 
 
 @method_decorator(staff_member_required, name='dispatch')
-class LibrarianLists(View):
-  def get(self, request):
-    librarian = Librarian.objects.all()
-    return render(request, 'library/librarian_lists.html', {'librarian':librarian})
+class LibrarianLists(ListView):
+  queryset = Faculty.objects.all().order_by('id')
+  template_name = 'library/librarian_lists.html'
+  context_object_name = "librarian"
+  paginate_by = 2
 
 
 
@@ -343,10 +330,30 @@ class UserDelete(View):
       return redirect('library:librarian_lists')
 
 
-
-def validate_username(request):
-    username = request.GET.get('username', None)
+class validate_username(View):
+  def post(self, request):
+    username = request.POST.get('username', None)
     data = {
-        'is_taken': User.objects.filter(username__iexact=username).exists()
+      'is_taken': User.objects.filter(username__iexact=username).exists()
     }
     return JsonResponse(data)
+
+
+class CopyIncDec(View):
+  def post(self, request):
+    pk = request.POST.get('id')
+    symbol = request.POST.get('symbol')
+    book = Book.objects.get(id=pk)
+
+    if symbol == 'plus':
+      book.no_of_copy += 1
+      book.available_copy +=1
+    else:
+      book.no_of_copy -= 1
+      book.available_copy -= 1
+
+    book.save()
+    return JsonResponse({'status':1, 'book_copy':book.no_of_copy, 'avail':book.available_copy})
+
+
+

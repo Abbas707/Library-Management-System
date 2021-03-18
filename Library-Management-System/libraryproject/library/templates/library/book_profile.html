@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-
+{% load static %}
 
 <br> 
 <div class="container">
@@ -58,12 +57,15 @@
 					<a href="{% url 'library:book_update' pk=book.pk %}" class="btn btn-info btn-sm">Edit</a>&nbsp;
 					<a href="{% url 'library:book_delete' pk=book.pk %}" class="btn btn-info btn-sm" onclick="if (!confirm('Are you sure?')) { return false }">Delete</a>&nbsp;	
 				{% endif %}
+
+				{% if not user.is_staff %}
+				<a href="" class="btn btn-primary btn-sm">Issue Book</a>&nbsp;
+				{% endif %}
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="profile-work">
-					
 				</div>
 			</div>
 			<div class="col-md-8">
@@ -95,10 +97,16 @@
 								</div>
 								<div class="row">
 									<div class="col-md-6">
-										<label>Total no of copies</label>
+										<label>Total no of copies</label>  
 									</div>
 									<div class="col-md-6">
-										<p>{{book.no_of_copy}}</p>
+										{% if user.is_staff %}
+											<a href="#" id='minus' class="btn btn-danger btn-sm">-</a>
+                    {% endif %}
+                    <span id='copy'>{{book.no_of_copy}}</span>&nbsp;
+                    {% if user.is_staff %}
+											<a href="#" id='plus' class="btn btn-primary btn-sm">+</a>&nbsp;
+                    {% endif %}
 									</div>
 								</div>
 								<div class="row">
@@ -106,7 +114,7 @@
 										<label>Available copies</label>
 									</div>
 									<div class="col-md-6">
-										<p>{{book.available_copy}}</p>
+										<p><span id='avail'> {{book.available_copy}} </span></p>
 									</div>
 								</div>
 					</div>
@@ -164,3 +172,16 @@
 	</form>           
 </div>
 {% endblock %}
+
+{% if user.is_staff %}
+	{% block javascript %}
+		<script>
+			var TemplateVariable = {
+				url: "{% url 'library:copy_incdec' %}",
+				id: {{book.id}},
+				csrf_token: '{{csrf_token}}',
+			}
+		</script>
+		<script src="{% static 'js/bookProfile.js' %}"></script>
+	{% endblock %}
+{% endif %}

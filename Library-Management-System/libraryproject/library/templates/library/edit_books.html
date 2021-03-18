@@ -3,16 +3,17 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
+{% load static %}
 <br>
 
-<h1><em><b><u>Add books</u> </b></em></h1> <br><br>
+<h1><em><b><u>Edit books</u> </b></em></h1> <br><br>
 
 <div class="contain">
 <form class="" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   
   {{bookform|crispy}}
-  
+
   <div class="text-center">
     <input type="submit" class="btn btn-success btn-lg" value="Submit" name="submit">
   </div>
@@ -24,7 +25,11 @@
 
 {% block javascript %}
   <script>
-    $("#id_no_of_copy").attr('placeholder','Total no of copies')
-    $("#id_available_copy").attr('placeholder','Available copies')
+    var TemplateVar = {
+      url: "{% url 'library:copy_incdec' %}",
+      id: {{books.id}},
+      csrf_token: '{{csrf_token}}',
+    }
   </script>
+  <script src="{% static 'js/increment_decrement.js' %}"></script>
 {% endblock %}
