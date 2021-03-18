@@ -33,7 +33,6 @@ class UserForm(UserCreationForm):
     raise forms.ValidationError('This Email Address is Already in use!!')
 
 
-
 class UserFormOne(forms.ModelForm):
   first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter first name'}))
   last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter last name'}))
