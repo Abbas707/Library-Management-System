@@ -74,10 +74,6 @@ class SignupView(View):
     userform = UserForm(request.POST, request.FILES)
 
     if userform.is_valid() and usertype.is_valid():
-      subject = 'Welcome to Library Management System.'
-      message = 'Thanks for Signing In! Hope you will enjoy our services!!'
-      recepient = str(userform['email'].value())
-      send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
 
       user = userform.save(commit=False)
       user.save()
@@ -109,11 +105,6 @@ class LibrarianSignup(View):
     librarianform = LibrarianForm(request.POST)
 
     if userform.is_valid() and librarianform.is_valid():
-      subject = 'Welcome to Online Library Management System'
-      message = 'Hope you are enjoying!!'
-      recepient = str(userform['email'].value())
-      send_mail(subject, message, EMAIL_HOST_USER, [recepient], fail_silently=False)
-
       user = userform.save(commit=False)
 
       role1 = Role.objects.get(role='Librarian')
