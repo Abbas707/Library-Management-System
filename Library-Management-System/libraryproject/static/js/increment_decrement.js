@@ -51,7 +51,7 @@ $(function()
               symbol: 'minus'
             },
           success: function(data){
-              console.log(data.status)
+              // console.log(data.status)
               if(data.status == "1"){
                   x.val(data.book_copy);
                   y.val(data.avail);

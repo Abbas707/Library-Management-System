@@ -10,7 +10,7 @@ from django.contrib import messages
 from library.models import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from libraryproject.settings import EMAIL_HOST_USER,EMAIL_HOST_PASSWORD
+from libraryproject.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.db.models import Q

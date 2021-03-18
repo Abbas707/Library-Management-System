@@ -14,7 +14,6 @@ class UserForm(UserCreationForm):
   phone_no = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter contact number'}))
   email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'Enter your mail'}))
 
-
   class Meta:
     model = User
     fields = ('role', 'department', 'first_name', 'last_name', 'email', 'username', 'password1','password2','phone_no', 'profile_pic',)
@@ -32,8 +31,6 @@ class UserForm(UserCreationForm):
     
     # A user was found with this email, raise an error
     raise forms.ValidationError('This Email Address is Already in use!!')
-
-
 
 
 
