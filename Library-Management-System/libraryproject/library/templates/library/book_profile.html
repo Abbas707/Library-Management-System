@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<br> 
+<div class="container">
+{% if messages %}
+{% for message in messages %}
+  <div class="alert alert-secondary" role="alert">
+	{{message}}
+  </div>
+{% endfor %}
+{% endif %}
+</div>
+
+<br>
+
+{% if user.is_staff %}
+<div class="container">
+	<a href="{% url 'library:book_lists' %}" class="btn btn-info btn-sm">Go to Book Lists Table</a>&nbsp;
+</div>
+{% endif %}
+
+<div class="container emp-profile">
+	<form method="post">
+		<div class="row">
+			<div class="col-md-4">
+				{% if book.cover_pic %}
+				<div class="" style="width:182px; height:100px; padding-left:19px; padding-right:4px;">
+				<img class="card-img-top" src="{{book.cover_pic.url}}" alt="Card image" style="width:100%">
+				</div>
+				{% endif %}
+				
+			</div>
+			<div class="col-md-6">
+				<div class="profile-head">
+							<h3>
+								{{book.title}}
+							</h3>
+							<h6>
+								
+							</h6>
+							<p class="proile-rating">RANKINGS : <span>8/10</span></p>
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"> </a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-2">
+				{% if user.is_staff %}
+					<a href="{% url 'library:book_update' pk=book.pk %}" class="btn btn-info btn-sm">Edit</a>&nbsp;
+					<a href="{% url 'library:book_delete' pk=book.pk %}" class="btn btn-info btn-sm" onclick="if (!confirm('Are you sure?')) { return false }">Delete</a>&nbsp;	
+				{% endif %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="profile-work">
+					
+				</div>
+			</div>
+			<div class="col-md-8">
+				<div class="tab-content profile-tab" id="myTabContent">
+					<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+								<div class="row">
+									<div class="col-md-6">
+										<label>Book Category</label>
+									</div>
+									<div class="col-md-6">
+										<p>{{book.category}}</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<label>Author</label>
+									</div>
+									<div class="col-md-6">
+										<p>{{book.author}}</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<label>Description</label>
+									</div>
+									<div class="col-md-6">
+										<p>{{book.description|slice:":50"}}...</p> 
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<label>Total no of copies</label>
+									</div>
+									<div class="col-md-6">
+										<p>{{book.no_of_copy}}</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<label>Available copies</label>
+									</div>
+									<div class="col-md-6">
+										<p>{{book.available_copy}}</p>
+									</div>
+								</div>
+					</div>
+					<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+								<div class="row">
+									<div class="col-md-6">
+										<label>Experience</label>
+									</div>
+									<div class="col-md-6">
+										<p>Expert</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<label>Hourly Rate</label>
+									</div>
+									<div class="col-md-6">
+										<p>10$/hr</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<label>Total Projects</label>
+									</div>
+									<div class="col-md-6">
+										<p>230</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<label>English Level</label>
+									</div>
+									<div class="col-md-6">
+										<p>Expert</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<label>Availability</label>
+									</div>
+									<div class="col-md-6">
+										<p>6 months</p>
+									</div>
+								</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label>Your Bio</label><br/>
+								<p>Your detail description</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>           
+</div>
+{% endblock %}
