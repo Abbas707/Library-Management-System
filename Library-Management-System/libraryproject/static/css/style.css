@@ -16,11 +16,8 @@ h1 {
 
 
 
-/* Home */
-
+/* Home CSS */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
-
-
 
 .card-img-top {
     border-top-right-radius: 10px;

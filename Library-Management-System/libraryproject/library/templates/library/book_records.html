@@ -1,35 +1,39 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-
 
 <div class="container" >
   
 <br> 
-<a href="{% url 'library:add_books' %}" class="btn btn-primary">Add New Books</a> <br>
-<h4 style="color:#1e6cb9"><b><center> List of Books </center></b></h4>
 
   <table class="table table-striped" style="background-color:#c9d2db">
-  <thead class="thead-dark">
+  <thead class="thead-light">
     <tr>
+      <th scope="col">ID</th>
+      <th scope="col">User</th>
+      <th scope="col">Role</th>
       <th scope="col">Title</th>
-      <th scope="col">Author</th>
-      <th scope="col">Category</th>
-      <th scope="col">Description</th>
-      <th scope="col">Total no of copies</th>
-      <th scope="col">Available copies</th>
+      <th scope="col">Issue Date</th>
+      <th scope="col">Due date</th>
+      <th scope="col">Return date</th>
     </tr>
   </thead>
   <tbody>
 
   {% for book in books %}
     <tr>
-      <td><a href="{% url 'library:book_profile' book.id %}">{{book.title}}</a></td>
-      <td>{{book.author}}</td>
-      <td>{{book.category}}</td>
-      <td>{{book.description|slice:":50"}}...</td>
-      <td>{{book.no_of_copy}}</td>
-      <td>{{book.available_copy}}</td>
+      <td>{{book.id}}</td>
+      <td>{{book.user}}</td>
+      <td>{{book.user.role}}</td>
+      <td>{{book.book.title}}</td>
+      <td>{{book.issue_date}}...</td>
+      <td>{{book.due_date}}</td>
+      {% if book.return_date == None %}
+      <td> ---- </td>
+      {% else %}
+      <td>{{book.return_date}}</td>
+      {% endif %}
     </tr>
   {% endfor %}
 

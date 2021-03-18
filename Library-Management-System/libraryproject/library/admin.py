@@ -12,7 +12,6 @@ admin.site.register(Role)
 admin.site.register(Student)
 admin.site.register(Faculty)
 admin.site.register(Librarian)
-admin.site.register(BookRecord)
 admin.site.register(Admin)
 
 class BookAdmin(admin.ModelAdmin):
@@ -26,3 +25,6 @@ class UserAdmin(admin.ModelAdmin):
   search_fields = ('username',)
 admin.site.register(User, UserAdmin)
 
+class BookRecordAdmin(admin.ModelAdmin):
+  list_display = ('book', 'user', 'issue_date', 'due_date', 'return_date')
+admin.site.register(BookRecord, BookRecordAdmin)

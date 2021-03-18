@@ -6,22 +6,26 @@
 
 <br>
 
-<h1><em><b><u>Welcome to Librarian Registration</u> </b></em></h1> <br><br>
+<h1><em><b><u>Update Details</u> </b></em></h1> <br><br>
 
 <div class="contain">
+  {% if messages %}
+  {% for message in messages %}
+      <div class="alert alert-success">
+          <strong>{{ message }}!</strong> 
+      </div>
+  {% endfor %}
+{% endif %}
+
 <form class="" method="post" enctype="multipart/form-data">
   {% csrf_token %}
 
   {{userform.first_name|as_crispy_field}}
   {{userform.last_name|as_crispy_field}}
   {{userform.username|as_crispy_field}}
-  {{userform.password1|as_crispy_field}}
-  {{userform.password2|as_crispy_field}}
   {{userform.phone_no|as_crispy_field}}
   {{userform.profile_pic|as_crispy_field}}
-  
-  {{librarianform|crispy}}
-   
+
   <div class="text-center">
     <input type="submit" class="btn btn-success btn-lg" value="Submit" name="submit">
   </div>
@@ -30,13 +34,3 @@
 </div>
 {% endblock %}
 
-{% block javascript %}
-  <script src="{% static 'js/username.js' %}"></script>
-
-  <script>
-    var TemplateVari = {
-      csrf_token: '{{csrf_token}}',
-    }
-  </script>
-  
-{% endblock %}

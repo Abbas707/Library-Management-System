@@ -29,7 +29,7 @@
       <td>{{faculty.user.department}}</td>
       <td>{{faculty.user.phone_no}}</td>
       <td>{{librarian.user.profile_pic}}</td>
-      <td><a href="{% url 'library:faculty_edit' faculty.user.id %}" class="btn btn-info btn-sm">Edit</a>&nbsp; </td>
+      <td><a href="{% url 'library:user_update' faculty.user.id %}" class="btn btn-info btn-sm">Edit</a>&nbsp; </td>
       <td><a href="{% url 'library:user_delete' faculty.user.id %}" class="btn btn-danger btn-sm" onclick="if (!confirm('Are you sure?')) { return false }">Delete</a>&nbsp; </td>
     </tr>
   {% endfor %}

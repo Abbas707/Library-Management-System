@@ -29,7 +29,7 @@ h4 {
 
 
 body {
-  background-color: #f9f9fa
+  background-color: #ffffff
 }
 
 .padding {
@@ -42,8 +42,8 @@ body {
 
 .card {
   border-radius: 5px;
-  -webkit-box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
-  box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+  -webkit-box-shadow: 0 1px 20px 0 rgba(44, 153, 204, 0.08);
+  box-shadow: 0 1px 20px 0 rgba(45, 145, 192, 0.08);
   border: none;
   margin-bottom: 30px
 }
@@ -62,7 +62,7 @@ body {
 
 .bg-c-lite-green {
   background: -webkit-gradient(linear, left top, right top, from(#e2926f), to(#aca0a1));
-  background: linear-gradient(to right, #979091, #77706c)
+  background: linear-gradient(to right, #db949e, #ebd1c2)
 }
 
 .user-profile {
@@ -166,5 +166,3 @@ h5 {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out
 }
-
-
