@@ -26,12 +26,20 @@ urlpatterns = [
   path('userdelete/<int:pk>/', views.UserDelete.as_view(), name='user_delete'),
 
   path('contact/', views.ContactView.as_view(), name='contact_us'),
-  path('ajax/validate_username/', views.validate_username.as_view(), name='validate_username'),
-  path('copy_incdec/',views.CopyIncDec.as_view(), name='copy_incdec'),
+  path('validate_username/', views.ValidateUsername.as_view(), name='validate_username'),
+  path('validate_email/', views.ValidateEmail.as_view(), name='validate_email'),
 
-  path('book_records/',views.BookRecords.as_view(), name='book_records'),
-  path('book_issue/',views.BookIssue.as_view(), name='book_issue'),
-  path('user_book_issue/<int:pk>/',views.UserBookIssue.as_view(), name='user_book_issue'),
+  path('copy_incdec/', views.CopyIncDec.as_view(), name='copy_incdec'),
+
+  path('book_records/', views.BookRecords.as_view(), name='book_records'),
+  path('book_issue/', views.BookIssue.as_view(), name='book_issue'),
+  path('user_book_issue/<int:pk>/' ,views.UserBookIssue.as_view(), name='user_book_issue'),
+  path('user_book_return/<int:id>/' ,views.UserBookReturn.as_view(), name='user_book_return'),
+  path('search_book/',views.BookSearch.as_view(), name='search_book'),
+
+  path('autocomplete/',views.AutoCompleteView.as_view(), name='autocomplete'),
+  path('search_record/',views.RecordSearch.as_view(), name='search_record'),
+
 ] 
 
 

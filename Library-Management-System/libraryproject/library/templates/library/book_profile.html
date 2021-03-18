@@ -61,7 +61,7 @@
 					<a href="{% url 'library:book_delete' pk=book.pk %}" class="btn btn-info btn-sm" onclick="if (!confirm('Are you sure?')) { return false }">Delete</a>&nbsp;	
 				{% endif %}
 
-				{% if not user.is_staff %}
+				{% if user.role.role == 'Student' or user.role.role == 'Faculty' %}
 					<button class="btn btn-primary btn-sm" id='issue-book'>Issue Book</button>
 				{% endif %}
 			</div>

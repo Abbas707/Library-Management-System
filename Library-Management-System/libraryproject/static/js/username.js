@@ -3,7 +3,7 @@ $("#id_username").change(function () {
   // console.log(username)
 
   $.ajax({
-    url: '/ajax/validate_username/',
+    url: '/validate_username/',
     method:'POST',
     data: {
       'username': username,

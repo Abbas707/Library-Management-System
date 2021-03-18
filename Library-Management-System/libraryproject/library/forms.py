@@ -12,10 +12,26 @@ class UserForm(UserCreationForm):
   password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'placeholder':'Enter Password'}))
   password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(attrs={'placeholder':'Confirm Password'}))
   phone_no = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter contact number'}))
+  email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'Enter your mail'}))
 
   class Meta:
     model = User
-    fields = ('role', 'department', 'first_name', 'last_name', 'username', 'password1','password2','phone_no', 'profile_pic',)
+    fields = ('role', 'department', 'first_name', 'last_name', 'email', 'username', 'password1','password2','phone_no', 'profile_pic',)
+
+  def clean_email(self):
+    # Get the mail
+    email = self.cleaned_data.get('email')
+
+    # Check to see if any users already exists with this email
+    try:
+      match = User.objects.filter(email=email)
+    except User.DoesNotExist:
+      # Unable to find a user
+      return email
+    
+    # A user was found with this email, raise an error
+    raise forms.ValidationError('This Email Address is Already in use!!')
+
 
 
 class UserFormOne(forms.ModelForm):

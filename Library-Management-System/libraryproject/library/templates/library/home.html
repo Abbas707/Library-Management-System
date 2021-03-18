@@ -1,62 +1,108 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+
 {% load static %}
 
+{% block search %}
+<form class="form-inline my-2 my-lg-0" method="get" action="/search_book/">
+    <input id="search" name="search_book" class="form-control mr-sm-2" type="search" placeholder="Title"
+        aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+{% endblock %}
+
+
 {% block content %}
-{% comment %}
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> {% endcomment%}
+<br>
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info">
+        <strong>{{ message }}!</strong>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
 
 
 <div class="container-fluid d-flex justify-content-center">
 
-    <div class="row mt-5" style="margin: 150px;">
-    
+    <div class="row mt-4" style="margin-left: 140px;">
+
         {% for book in books %}
-        <div class="col-md-3">
-            <div class="card" style="width: 250px; margin-top:10px;"> <img src="{{book.cover_pic.url}}" class="card-img-top" width="80%" height="250px">
+        <div class="col-md-4" style="margin:auto;">
+            <div class="card" style="width: 280px; margin-top:10px;"> <img src="{{book.cover_pic.url}}"
+                    class="card-img-top" width="80%" height="250px">
                 <div class="card-body pt-0 px-0">
-                    <div class="d-flex flex-row justify-content-between mb-0 px-3"> <small class="text-muted mt-1">Book Category</small>
+                    <div class="d-flex flex-row justify-content-between mb-0 px-3"> <small class="text-muted mt-1">Book
+                            Category</small>
                         <h6><small>{{book.category}}</small></h6>
                     </div>
                     <hr class="mt-2 mx-3">
                     <div class="d-flex flex-row justify-content-between px-3 pb-4">
-                        <div class="d-flex flex-column"><span class="text-muted">Title</span><small class="text-muted"> </small></div>
+                        <div class="d-flex flex-column"><span class="text-muted">Title</span><small class="text-muted">
+                            </small></div>
                         <div class="d-flex flex-column">
-                            <h5 class="mb-0"> </h5><small class="text-muted text-right">{{book.title|slice:'20'}}...</small>
+                            <h5 class="mb-0"> </h5><small class="text-muted text-right">{{book.title}} </small>
+
                         </div>
                     </div>
 
-                    <div class="mx-3 mt-1 mb-3"><a href="{% url 'library:book_profile' book.id %}" class="btn btn-danger btn-block"><small>Book Details</small></a></div> <div class="d-flex justify-content-center text-muted">
+                    <div class="mx-3 mt-1 mb-3"><a href="{% url 'library:book_profile' book.id %}"
+                            class="btn btn-danger btn-block"><small>Book Details</small></a></div>
+                    <div class="d-flex justify-content-center text-muted">
                         <p id="randomtxt" style="color:rgb(3, 170, 3); margin-bottom: 1px;">
-                        {% if book.available_copy < 1 %} 
-                        <span style="color:red;"> Unavailable </span>
-                        {% else %}
-                        *Available
-                        {% endif %}
+                            {% if book.available_copy < 1 %} <span style="color:red;"> Unavailable </span>
+                            {% else %}
+                            *Available
+                            {% endif %}
                         </p>
-                  
                     </div>
-                    
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
+
 </div>
 
 
-{% if is_paginated %}
-<nav aria-label="Page navigation container"></nav>
-<ul class="pagination justify-content-center">
-{% if page_obj.has_previous %}
-<li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV </a></li>
-{% endif %}
-{% if page_obj.has_next %}
-<li><a href="?page={{ page_obj.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
-{% endif %}
-</ul>
-</nav>
+
+<div class='container'>
+    {% if books.has_other_pages %}
+    <ul style='padding-left:40%' class="pagination">
+        {% if books.has_previous %}
+        <li style='margin-left:10px;'><a href="?page={{ books.previous_page_number }}"><button type="button"
+                    class="active btn btn-info">
+                    &laquo;</button> </a></li>
+        {% else %}
+        <li class="disabled">
+            <button type="button" class="btn btn-danger">
+                &laquo;</button>
+        </li>
+        {% endif %}
+        {% for i in books.paginator.page_range %}
+        {% if books.number == i %}
+        <li style='margin-left:10px;' class="active">
+            <button type="button" class="btn btn-info">
+                <span>{{ i }} <span class="sr-only"></span></span></button>
+        </li>
+        {% else %}
+        <li style='margin-left:10px;'><a href="?page={{ i }}">
+                <button type="button" class="btn btn-info">{{ i }}</button></a></li>
+        {% endif %}
+        {% endfor %}
+        {% if books.has_next %}
+        <li style='margin-left:10px;'><a href="?page={{ books.next_page_number }}">
+                <button type="button" class="btn btn-info">&raquo;</button></a></li>
+        {% else %}
+        <li style='margin-left:10px;' class="disabled"><button type="button" class="btn btn-danger">
+                &raquo;</button></li>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
 </div>
-{% endif %}
+
+
 
 {% endblock %}
-

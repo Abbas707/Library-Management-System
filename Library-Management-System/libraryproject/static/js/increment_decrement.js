@@ -1,11 +1,11 @@
 $(function()
 {
     let x = $('#id_no_of_copy');
-    console.log(x)
+    // console.log(x)
     x.after(`<a href="#" id='plus' class="btn btn-primary btn-lg">+</a>`);
     x.after(`<a href="#" id='minus' class="btn btn-danger btn-lg">-</a>`);
     let y = $('#id_available_copy');
-    console.log(y)
+    // console.log(y)
     y.attr("disabled","disabled");
     x.attr("disabled","disabled");
   
@@ -51,7 +51,7 @@ $(function()
               symbol: 'minus'
             },
           success: function(data){
-              console.log(data.status)
+              // console.log(data.status)
               if(data.status == "1"){
                   x.val(data.book_copy);
                   y.val(data.avail);
